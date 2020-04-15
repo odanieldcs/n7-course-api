@@ -16,7 +16,13 @@
     "prettier:fix": "prettier --write 'src/**/*.js'",
     "prepare": "npm run lint:fix && npm run prettier:fix"
   },
-  "dependencies": {},
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "morgan": "^1.10.0"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
