@@ -1,28 +1,27 @@
 import './env';
+import './database';
 import express from 'express';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import routes from './routes';
-import database from './database';
 
-const prepare = async () => {
-  const app = express();
+class App {
+  constructor() {
+    this.server = express();
+    this.middlewares();
+    this.routes();
+  }
 
-  app.use(bodyParser.json());
-  app.use(morgan('combined'));
-  app.use(helmet());
+  middlewares() {
+    this.server.use(bodyParser.json());
+    this.server.use(helmet());
+    this.server.use(morgan('combined'));
+  }
 
-  app.database = database;
-  await app.database.connect();
+  routes() {
+    this.server.use(routes);
+  }
+}
 
-  app.use('/', routes(app));
-
-  return app;
-};
-
-export default async () => {
-  const app = prepare();
-
-  return app;
-};
+export default new App().server;
