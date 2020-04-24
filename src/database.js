@@ -1,53 +1,39 @@
-import fs from 'fs';
-import path from 'path';
 import Sequelize from 'sequelize';
+import User from './models/user';
 
-const database = {};
+const models = [User];
 
-const loadModels = (sequelize) => {
-  const dir = path.join(__dirname, './models');
+class Database {
+  constructor() {
+    this.init();
+  }
 
-  fs.readdirSync(dir).forEach((file) => {
-    const modelDir = path.join(dir, file);
-    const model = sequelize.import(modelDir);
-    database[model.name] = model;
-  });
+  init() {
+    this.connection = new Sequelize(
+      process.env.DATABASE_DATABASE,
+      process.env.DATABASE_USERNAME,
+      process.env.DATABASE_PASSWORD,
+      {
+        host: process.env.DATABASE_HOSTNAME,
+        port: process.env.DATABASE_HOSTPORT,
+        dialect: 'mysql',
+        logging: console.log,
+        define: {
+          timestamps: false,
+        },
+      }
+    );
 
-  return database;
-};
+    this.connection
+      .authenticate()
+      .then(() => {
+        console.log('Connection has been established successfully.');
+        models.map((model) => model.init(this.connection));
+      })
+      .catch((err) => {
+        console.error('Unable to connect to the database:', err);
+      });
+  }
+}
 
-const connect = () => {
-  const sequelize = new Sequelize(
-    process.env.DATABASE_DATABASE,
-    process.env.DATABASE_USERNAME,
-    process.env.DATABASE_PASSWORD,
-    {
-      host: process.env.DATABASE_HOSTNAME,
-      port: process.env.DATABASE_HOSTPORT,
-      dialect: 'mysql',
-      logging: console.log,
-      define: {
-        timestamps: false,
-      },
-    }
-  );
-
-  sequelize
-    .authenticate()
-    .then(() => {
-      console.log('Connection has been established successfully.');
-    })
-    .catch((err) => {
-      console.error('Unable to connect to the database:', err);
-    });
-
-  loadModels(sequelize);
-
-  database.sequelize = sequelize;
-  database.Sequelize = Sequelize;
-};
-
-export default {
-  connect,
-  models: database,
-};
+export default new Database();
