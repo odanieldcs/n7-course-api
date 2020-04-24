@@ -1,34 +1,45 @@
-export default (sequelize, DataTypes) => {
-  const Users = sequelize.define('User', {
-    id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    login: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    userProfile: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
-  });
+import Sequelize, { Model } from 'sequelize';
 
-  return Users;
-};
+class Users extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        id: {
+          allowNull: false,
+          primaryKey: true,
+          type: Sequelize.UUID,
+          defaultValue: Sequelize.UUIDV4,
+        },
+        login: {
+          type: Sequelize.TEXT,
+          allowNull: false,
+        },
+        password: {
+          type: Sequelize.TEXT,
+          allowNull: false,
+        },
+        userProfile: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+        },
+        status: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+        },
+        active: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+        },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE,
+      },
+      {
+        sequelize,
+      }
+    );
+
+    return this;
+  }
+}
+
+export default Users;

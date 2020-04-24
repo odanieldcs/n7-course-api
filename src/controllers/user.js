@@ -1,11 +1,9 @@
-class UserController {
-  constructor(User) {
-    this.User = User;
-  }
+import User from '../models/user';
 
+class UserController {
   async get(req, res) {
     try {
-      const users = await this.User.findAll();
+      const users = await User.findAll();
       res.send(users);
     } catch (err) {
       res.status(400).send(err.message);
@@ -15,7 +13,7 @@ class UserController {
   async getOne(req, res) {
     try {
       const { id } = req.params;
-      const user = await this.User.findOne({
+      const user = await User.findOne({
         where: { id },
       });
       res.send(user);
@@ -26,7 +24,7 @@ class UserController {
 
   async create(req, res) {
     try {
-      const users = await this.User.create(req.body);
+      const users = await User.create(req.body);
       res.status(201).json({
         users,
       });
@@ -38,12 +36,12 @@ class UserController {
   async update(req, res) {
     try {
       const { id } = req.params;
-      const [updated] = await this.User.update(req.body, {
+      const [updated] = await User.update(req.body, {
         where: { id },
       });
 
       if (updated) {
-        const updatedPost = await this.User.findOne({ where: { id } });
+        const updatedPost = await User.findOne({ where: { id } });
         res.status(200).json({ post: updatedPost });
       }
 
@@ -56,7 +54,7 @@ class UserController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      const deleted = await this.User.destroy({
+      const deleted = await User.destroy({
         where: { id },
       });
 
@@ -71,4 +69,4 @@ class UserController {
   }
 }
 
-export default UserController;
+export default new UserController();
