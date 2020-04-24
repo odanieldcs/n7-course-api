@@ -1,14 +1,12 @@
+import { Router } from 'express';
 import UserController from '../controllers/user';
-import database from '../database';
 
-export default (app) => {
-  const userController = new UserController(database.models.User);
+const router = new Router();
 
-  app.route('/users').get((req, res) => userController.get(req, res));
-  app.route('/users').post((req, res) => userController.create(req, res));
-  app.route('/users/:id').get((req, res) => userController.getOne(req, res));
-  app.route('/users/:id').put((req, res) => userController.update(req, res));
-  app.route('/users/:id').delete((req, res) => userController.delete(req, res));
+router.get('/', (req, res) => UserController.get(req, res));
+router.get('/:id', UserController.getOne);
+router.post('/', UserController.create);
+router.put('/:id', UserController.update);
+router.delete('/:id', UserController.delete);
 
-  return app.route;
-};
+export default router;
